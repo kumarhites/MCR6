@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { useData } from "../contexts/DataProvider";
 import Reviews from "../components/Reviews";
+import Modal from "../components/Modal";
 
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
   const { restaurants } = useData();
+  let [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
 
   const restaurantDetails = restaurants?.find(
     (restaurant) => restaurant.id === Number(restaurantId)
@@ -17,6 +27,7 @@ const RestaurantDetails = () => {
 
   return (
     <div className="max-w-[1280px] mx-auto">
+      <Modal isOpen={isOpen} closeModal={closeModal} />
       <div className="flex items-center mt-5 gap-3 justify-between border-b-2 border-neutral-500 pb-2">
         <div className="flex items-center gap-3">
           <NavLink to="/">
@@ -47,7 +58,10 @@ const RestaurantDetails = () => {
             <div>Average rating: {restaurantDetails?.averageRating}</div>
           </div>
         </div>
-        <button className="bg-rose-500 text-white px-5 py-2 rounded-lg">
+        <button
+          className="bg-rose-500 text-white px-5 py-2 rounded-lg"
+          onClick={openModal}
+        >
           Add Review
         </button>
       </div>
