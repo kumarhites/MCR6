@@ -1,7 +1,21 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-export default function Modal({ isOpen, closeModal }) {
+export default function Modal({
+  isOpen,
+  closeModal,
+  reviewData,
+  setReviewData,
+  updateRestaurantRating,
+}) {
+  // Update the state
+  const updateReviewData = (key, value) => {
+    setReviewData((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
+  };
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -41,18 +55,33 @@ export default function Modal({ isOpen, closeModal }) {
                       Name:
                       <input
                         type="text"
-                        name="name"
+                        name="revName"
                         id=""
                         placeholder="Enter your name"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        value={reviewData.revName}
+                        onChange={(event) =>
+                          updateReviewData(
+                            event.target.name,
+                            event.target.value
+                          )
+                        }
                       />
                       <br />
                       Rating:
                       <select
                         name="rating"
+                        onChange={(event) =>
+                          updateReviewData(
+                            event.target.name,
+                            event.target.value
+                          )
+                        }
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-3"
                       >
-                        <option defauntValue value="Select...">Select Rating</option>
+                        <option defaultValue={"Select..."}>
+                          Select Rating
+                        </option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -67,6 +96,12 @@ export default function Modal({ isOpen, closeModal }) {
                           rows={5}
                           placeholder="Enter your comment"
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          onChange={(event) =>
+                            updateReviewData(
+                              event.target.name,
+                              event.target.value
+                            )
+                          }
                         ></textarea>
                       </div>
                     </form>
@@ -76,7 +111,7 @@ export default function Modal({ isOpen, closeModal }) {
                     <button
                       type="button"
                       className="inline-flex justify-center rounded-md border border-transparent bg-rose-100 px-4 py-2 text-sm font-medium text-rose-900 hover:bg-rose-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
+                      onClick={updateRestaurantRating}
                     >
                       Add Review
                     </button>

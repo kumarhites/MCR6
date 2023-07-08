@@ -6,16 +6,43 @@ import Modal from "../components/Modal";
 
 const RestaurantDetails = () => {
   const { restaurantId } = useParams();
-  const { restaurants } = useData();
+  const { restaurants, setRestaurants } = useData();
   let [isOpen, setIsOpen] = useState(false);
+  const [reviewData, setReviewData] = useState({
+    revName: "",
+    comment: "",
+    rating: "",
+  });
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
+
+  const updateRestaurantRating = (restaurantId, reviewData) => {
+    const updatedRestaurants = restaurantsData.map((restaurant) => {
+      if (restaurant.id === restaurantId) {
+        return {
+          ...restaurant,
+          ratings: [
+            ...restaurant.ratings,
+            {
+              rating: reviewData?.rating,
+              revName: reviewData?.revName,
+              comment: reviewData?.comment,
+              pp: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3uO7UUBnkvtntc2R8Y9krkgWvbl-BTKMazZjg8Ul-gmDgzQeb8I6DIQ&s=0",
+            },
+          ],
+        };
+      }
+      return restaurant;
+    });
+
+    setRestaurants(updatedRestaurants);
+  };
 
   const restaurantDetails = restaurants?.find(
     (restaurant) => restaurant.id === Number(restaurantId)
@@ -23,11 +50,15 @@ const RestaurantDetails = () => {
   const { id, name, cuisine_id, address, phone, menu, averageRating, ratings } =
     restaurantDetails;
 
-  console.log(restaurantDetails);
-
   return (
     <div className="max-w-[1280px] mx-auto">
-      <Modal isOpen={isOpen} closeModal={closeModal} />
+      <Modal
+        isOpen={isOpen}
+        closeModal={closeModal}
+        reviewData={reviewData}
+        setReviewData={setReviewData}
+        updateRestaurantRating={updateRestaurantRating}
+      />
       <div className="flex items-center mt-5 gap-3 justify-between border-b-2 border-neutral-500 pb-2">
         <div className="flex items-center gap-3">
           <NavLink to="/">
@@ -69,8 +100,8 @@ const RestaurantDetails = () => {
         <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
           Reviews
         </h1>
-        {ratings?.map((rating) => (
-          <Reviews rating={rating} />
+        {ratings?.map((rating, index) => (
+          <Reviews key={index} rating={rating} />
         ))}
       </div>
     </div>

@@ -15,7 +15,15 @@ export const DataProvider = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ cuisines, getRestaurants, selectedRestaurants, restaurants }}>
+    <DataContext.Provider
+      value={{
+        cuisines,
+        getRestaurants,
+        selectedRestaurants,
+        restaurants,
+        setRestaurants,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );
